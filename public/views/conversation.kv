@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+#:import config src.config.config
+
+<MessageLabel@Label>
+    size_hint: (1, None)
+    text_size: root.width, None
+    size: self.texture_size
+    valign: 'middle'
+    padding: 20, 15
+
+<MessageSent@MessageLabel>
+    halign: "left"
+
+<MessageReceived@MessageLabel>
+    halign: "right"
+
+<ConversationContainer@ScrollView>
+    do_scroll_x: False
+    do_scroll_y: True
+    size_hint: (1, .95)
+
+    GridLayout:
+        id: messages_container
+        cols: 1
+        spacing: 2
+        size_hint_y: None
+
+
+<MessageInput@TextInput>
+    size_hint: (.7, 1)
+    font_size: 15
+    padding: 10, 10
+
+
+<SendMessageButton@Button>
+    id: send_btn
+    size_hint: (.1, 1)
+    font_size: 20
+    text: "Envoyer"
+    background_color: config.BG_COLOR_LEVEL_1
+    on_press: self.parent.parent.send_message()
+
+
+<InputsContainer@BoxLayout>
+    size_hint: (1, .05)
+    orientation: "horizontal"
+
+    MessageInput:
+        id: message_input
+
+    SendMessageButton:
+
+<Conversation@RelativeLayout>

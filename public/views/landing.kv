@@ -1,0 +1,79 @@
+# -*- coding: utf-8 -*-
+#:import config src.config.config
+
+
+<ClickableLink@Button>
+    font_size: 15
+    size_hint: (1, None)
+    background_color: (0, 0, 0, 0)
+
+<LandingScreen>:
+    channels_box : channels_box
+    conversation_box : conversation_box
+
+    canvas:
+        Color:
+            rgba: config.BG_COLOR_LEVEL_1
+        Rectangle:
+            pos: 0, 0
+            size: self.width, self.height
+
+    Header:
+
+    BoxLayout:
+        size_hint: (1, .95)
+        orientation: "horizontal"
+
+        BoxLayout :
+            id: channels_box
+            orientation: "vertical"
+            size_hint: (.05, 1)
+
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, .15
+                Rectangle:
+                    pos: self.pos
+                    size: self.width, self.height
+
+        BoxLayout :
+            id: rooms_box
+            orientation: "vertical"
+            size_hint: (.2, 1)
+
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, .30
+                Rectangle:
+                    pos: self.pos
+                    size: self.width, self.height
+
+            Label:
+                text: "ROOMS"
+
+        BoxLayout :
+            id: conversation_box
+            orientation: "vertical"
+            size_hint: (.60, 1)
+
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, .15
+                Rectangle:
+                    pos: self.pos
+                    size: self.width, self.height
+
+        BoxLayout :
+            id: participants_box
+            orientation: "vertical"
+            size_hint: (.15, 1)
+
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, .3
+                Rectangle:
+                    pos: self.pos
+                    size: self.width, self.height
+
+            Label:
+                text: "PARTICIPANTS"
