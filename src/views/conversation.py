@@ -18,6 +18,8 @@ from src.libs.bot.commands import Commands
 from src.models.gen_message import Message
 from src.models.connectdb import ConnectToDb
 from src.views.teams_container import TeamsContainer
+import threading
+from kivy.clock import Clock
 
 Builder.load_file("{0}/conversation.kv".format(config.VIEWS_DIR))
 
@@ -45,29 +47,31 @@ class ConversationContainer(ScrollView):
         self.channel_id = channel_id
         self.server_id = server_id
         self.messages_box = self.ids.messages_container
+        self.last_list = []
 
         # Démarrer la mise à jour régulière de la conversation
-        self.constant_update(channel_id, server_id)
+        event = Clock.schedule_interval(self.constant_update, 1 / 5.)
 
-    def constant_update(self, channel_id, server_id):
-        self.init_conversation(channel_id, server_id)
-        # time.sleep(1)
-
-    def init_conversation(self, channel_id, server_id):
-        # conv_file_path = config.PUBLIC_DIR + "/tmp_conversations/basic.json"
-        messages = ConnectToDb().messages
+    def constant_update(self, dt):
         sort_da_list = []
-        if messages.find():
-            pass
-        else:
-            test = Message("testMessage", "User1", channel_id, server_id)
-            test.send_to_db()
-
+        messages = ConnectToDb().messages
         for message in messages.find():
             sort_da_list.append(message)
+        inthere = True
+        for i in sort_da_list:
+            if i not in self.last_list:
+                inthere = False
+        if not inthere:
+            self.init_conversation(self.channel_id, self.server_id)
+        self.last_list = sort_da_list
 
+    def init_conversation(self, channel_id, server_id):
+        sort_da_list = []
+        messages = ConnectToDb().messages
+        for message in messages.find():
+            sort_da_list.append(message)
+        # conv_file_path = config.PUBLIC_DIR + "/tmp_conversations/basic.json"
         sort_da_list.reverse()
-
         for message in sort_da_list:
             if message["room"] == channel_id:
                 if message["server"] == server_id:
@@ -111,3 +115,4 @@ class Conversation(RelativeLayout):
                 self.messages_container.add_message(msg_res, pos="right")
 
             self.inputs_container.ids.message_input.text = ""
+
