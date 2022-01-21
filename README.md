@@ -15,6 +15,15 @@ Langue utilisée pour coder : Anglais
 
 Langue utilisée pour documenter : Anglais 
 
+Base de données utlisée : MongoDB Atlas https://www.mongodb.com/fr-fr/cloud/atlas
+
+Documentation Framework : https://kivy.org/doc/stable/api-kivy.html
+
+Source unique des icons : https://remixicon.com/
+
+Convention de nommage :
+    https://www.python.org/dev/peps/pep-0008/
+
 ## Comment l'utiliser.
 Voici un tableau des différentes étapes a suivre avant de lancer le chat et comment l'utiliser 
 
