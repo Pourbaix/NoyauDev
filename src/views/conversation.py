@@ -47,28 +47,10 @@ class ConversationContainer(ScrollView):
         self.channel_id = channel_id
         self.server_id = server_id
         self.messages_box = self.ids.messages_container
-        self.last_list = []
-
         self.init_conversation(channel_id, server_id)
-        Clock.unschedule(self.constant_update, all=True)
-        # Démarrer la mise à jour régulière de la conversation
-        event = Clock.schedule_interval(self.constant_update, 1)
-
-    def constant_update(self, dt):
-        print("clock on!" + str(self.server_id) + str(self.channel_id))
-        sort_da_list = []
-        messages = ConnectToDb().messages
-        for message in messages.find():
-            sort_da_list.append(message)
-        inthere = True
-        for i in sort_da_list:
-            if i not in self.last_list:
-                inthere = False
-        if not inthere:
-            self.init_conversation(self.channel_id, self.server_id)
-        self.last_list = sort_da_list
 
     def init_conversation(self, channel_id, server_id):
+        print("INIT")
         sort_da_list = []
         messages = ConnectToDb().messages
         for message in messages.find():
@@ -100,9 +82,14 @@ class Conversation(RelativeLayout):
         self.inputs_container = InputsContainer()
         self.channel = channel_id
         self.server = server_id
+        self.last_list = []
 
         self.add_widget(self.messages_container)
         self.add_widget(self.inputs_container)
+
+        Clock.unschedule(self.constant_update, all=True)
+        # Démarrer la mise à jour régulière de la conversation
+        event = Clock.schedule_interval(self.constant_update, 1)
 
     def send_message(self):
         txt = self.inputs_container.ids.message_input.text
@@ -119,3 +106,24 @@ class Conversation(RelativeLayout):
                 self.messages_container.add_message(msg_res, pos="right")
 
             self.inputs_container.ids.message_input.text = ""
+
+    def refresh(self):
+        print("REFRESH")
+        self.messages_container.messages_box.clear_widgets()
+        for child in self.messages_container.messages_box.children:
+            print(child)
+
+    def constant_update(self, dt):
+        print("clock on!" + str(self.server) + str(self.channel))
+        sort_da_list = []
+        messages = ConnectToDb().messages
+        for message in messages.find():
+            sort_da_list.append(message)
+        inthere = True
+        for i in sort_da_list:
+            if i not in self.last_list:
+                inthere = False
+        if not inthere:
+            self.refresh()
+            self.messages_container.init_conversation(self.channel, self.server)
+        self.last_list = sort_da_list
