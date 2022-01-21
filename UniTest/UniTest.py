@@ -17,5 +17,5 @@ class TestGenMessage(unittest.TestCase):
 
 class TestConnectDb(unittest.TestCase):
 
-    def test_init(self):
-        pass
+    def test_number_message(self):
+        self.assertTrue(isinstance(ConnectToDb().number_message(), int))

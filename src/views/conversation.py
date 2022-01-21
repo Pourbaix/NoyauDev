@@ -49,10 +49,13 @@ class ConversationContainer(ScrollView):
         self.messages_box = self.ids.messages_container
         self.last_list = []
 
+        self.init_conversation(channel_id, server_id)
+        Clock.unschedule(self.constant_update, all=True)
         # Démarrer la mise à jour régulière de la conversation
-        event = Clock.schedule_interval(self.constant_update, 1 / 5.)
+        event = Clock.schedule_interval(self.constant_update, 1)
 
     def constant_update(self, dt):
+        print("clock on!" + str(self.server_id) + str(self.channel_id))
         sort_da_list = []
         messages = ConnectToDb().messages
         for message in messages.find():
@@ -71,6 +74,7 @@ class ConversationContainer(ScrollView):
         for message in messages.find():
             sort_da_list.append(message)
         # conv_file_path = config.PUBLIC_DIR + "/tmp_conversations/basic.json"
+
         sort_da_list.reverse()
         for message in sort_da_list:
             if message["room"] == channel_id:
@@ -115,4 +119,3 @@ class Conversation(RelativeLayout):
                 self.messages_container.add_message(msg_res, pos="right")
 
             self.inputs_container.ids.message_input.text = ""
-
