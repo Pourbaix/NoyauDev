@@ -71,7 +71,6 @@ class ConversationContainer(ScrollView):
             msg = MessageReceived()
 
         msg.text = str(msg_obj.date) + " - " + msg_obj.user + "\n" + msg_obj.data
-        self.messages_box.add_widget(msg, len(self.messages_box.children))
 
 
 class Conversation(RelativeLayout):
@@ -88,7 +87,7 @@ class Conversation(RelativeLayout):
         self.add_widget(self.inputs_container)
 
         # Démarrer la mise à jour régulière de la conversation
-        self.event = Clock.schedule_interval(self.constant_update, 1)
+        self.event = Clock.schedule_interval(self.constant_update, 1.5)
 
     def send_message(self):
         txt = self.inputs_container.ids.message_input.text
