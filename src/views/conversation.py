@@ -145,7 +145,7 @@ class Conversation(RelativeLayout):
         self.add_widget(self.messages_container)
         self.add_widget(self.inputs_container)
         # Démarrer la mise à jour régulière de la conversation
-        self.event = Clock.schedule_interval(self.constant_update, 0.5)
+        self.event = Clock.schedule_interval(self.constant_update, 1.5)
 
     def send_message(self):
         txt = self.inputs_container.ids.message_input.text
