@@ -19,3 +19,4 @@ ROOT_DIR = sys.path[1]
 PUBLIC_DIR = os.path.join(ROOT_DIR, 'public')
 IMG_DIR = os.path.join(PUBLIC_DIR, 'images')
 VIEWS_DIR = os.path.join(PUBLIC_DIR, 'views')
+loop = True

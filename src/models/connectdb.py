@@ -27,9 +27,11 @@ class ConnectToDb:
             cluster = MongoClient(uri, tls=True, tlsCertificateKeyFile=certificat_path)
             db1 = cluster["ephecom-2TL2"]
             messages = db1["messages"]
+            loop = db1["loop"]
 
             self.__db = db1
             self.__messages = messages
+            self.__loop = loop
         except ConnectError:
             raise ConnectError("\n\n-----------------------------"
                                "An error has occurred while connecting to the database."
@@ -65,3 +67,7 @@ class ConnectToDb:
         """
         doc_count = self.__messages.count_documents({})
         return doc_count
+
+    @property
+    def loop(self):
+        return self.__loop

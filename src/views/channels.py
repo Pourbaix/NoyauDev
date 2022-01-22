@@ -58,7 +58,6 @@ class ChannelsContainer(ScrollView):
         groups = {}
 
         for channel in self.channels_list:
-
             group_name = channel.group.name
             if group_name not in groups:
                 group = BoxLayout(orientation="vertical", size_hint_y=None)
@@ -75,7 +74,13 @@ class ChannelsContainer(ScrollView):
             channel_name_row = ChannelsListButton(text=channel.channel_name,
                                                   on_press=lambda a, _server_id=channel.server_identifier, _channel_id=channel.channel_identifier:
                                                   self.landing_screen.display_conversation(_channel_id, _server_id))
+            channel_name_row.bind(on_press=self.clear_loops)
             groups[group_name].add_widget(channel_name_row)
+
+    def clear_loops(self, dt):
+        test = self.parent
+        print(test)
+        print("Hello it's working!")
 
     def Press_auth(self, instance):
         print(str(instance))
