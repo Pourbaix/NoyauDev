@@ -7,11 +7,15 @@ class ParamNotStrException(Exception):
 
 
 class Message:
-    """This represents a Message send in chatroom.
-
-
+    """Represents a Message sent in the chatroom.
+    PRE: -
+    POST: Formats and sends message to database.
     """
     def __init__(self, data, user, room, server):
+        """Initializes with the current time & date, the data, room and server.
+        PRE: -
+        POST: Initializes current time & date, the data, room and server"""
+
         if type(data) != str or type(user) != str:
             raise ParamNotStrException("One of the argument is not a string.")
         self.data = data
@@ -23,10 +27,11 @@ class Message:
         self.server = server
 
     def db_formatting(self):
+        """Returns a dictionary with the correct format for the databse.
+        PRE: Having a database
+        POST: Formats the data.
         """
-        This function return a dictionary with all the in,formation about the message.
 
-        """
         return {
             "room": self.room,
             "timestamp": str(self.date),
@@ -35,9 +40,11 @@ class Message:
         }
 
     def send_to_db(self):
+        """Sends the data (message) to the database.
+        PRE: Having a database.
+        POST: Inserts data into database.
         """
 
-        """
         message = {
             "server": self.server,
             "room": self.room,

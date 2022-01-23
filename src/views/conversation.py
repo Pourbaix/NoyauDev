@@ -31,8 +31,12 @@ class ErrorWhileWriting(Exception):
 
 def get_username(file):
     """
-
+    :param file: the corresponding json file
+    Fetches the username from the json file.
+    PRE: Having the json file with the username inside
+    POST: Returns the username.
     """
+
     try:
         with open(file) as json_file:
             data = json.load(json_file)
@@ -44,7 +48,10 @@ def get_username(file):
 
 def read(file):
     """
-
+    :param file: the corresponding json file
+    Reads and returns the data from the json file
+    PRE: Having the correct json file.
+    POST: Returns the data from the json file.
     """
     try:
         with open(file) as json_file:
@@ -56,8 +63,13 @@ def read(file):
 
 def add_to_json(file, data):
     """
-
+    :param file: json file
+    :param data: data to be added in json file
+    Opens the json file (1st parameter) and adds the data (2nd parameter) into it.
+    PRE: Having existing json file and data.
+    POST: Writes the data in the json file.
     """
+
     try:
         elements_set = []
         with open(file) as shit:
@@ -75,7 +87,15 @@ def add_to_json(file, data):
 
 def modify_json(file, state, server, channel):
     """
+    :param file: the corresponding json file
+    :param state: the state of the loop
+    :param server: the server id
+    :param channel: the channel id
 
+    If the channel and server IDs are the current ones, it changes the state of the loop (clock) so that it can start
+    or stop.
+    PRE: Having the correct data format in the json file
+    POST: Modifies the state of the loop.
     """
     try:
         elements_set = []
@@ -95,7 +115,8 @@ def modify_json(file, state, server, channel):
 
 def overwrite(file, data):
     """
-
+        :param file: the json file
+        :param data:
     """
     try:
         elements_set = data
@@ -124,8 +145,14 @@ class MessageReceived(MessageLabel):
 
 
 class ConversationContainer(ScrollView):
-
     def __init__(self, channel_id, server_id):
+        """
+        :param channel_id: the id of the current channel
+        :param server_id: the id of the current server
+        Initialises the class with the channel and server id as well as the conversation and its container.
+        PRE: -
+        POST: Initialises the conversation
+        """
         super(ConversationContainer, self).__init__()
         self.channel_id = channel_id
         self.server_id = server_id
@@ -134,16 +161,20 @@ class ConversationContainer(ScrollView):
 
     def init_conversation(self, channel_id, server_id):
         """
-
+        :param channel_id: the id of the current channel
+        :param server_id: the id of the current server
+        Takes the messages from the database and adds displays them in the msg container.
+        PRE: Calling the function with the channel and server ID
+        POST: Displays messages
         """
         print("INIT")
-        sort_da_list = []
+        message_list = []
         messages = ConnectToDb().messages
         for message in messages.find():
-            sort_da_list.append(message)
+            message_list.append(message)
 
-        sort_da_list.reverse()
-        for message in sort_da_list:
+        message_list.reverse()
+        for message in message_list:
             if message["room"] == channel_id:
                 if message["server"] == server_id:
                     msg = MessageSent(text=message["date"] + " - " + message["user"] + "\n" + message["data"])
@@ -164,8 +195,18 @@ class ConversationContainer(ScrollView):
 class Conversation(RelativeLayout):
 
     def __init__(self, channel_id, server_id):
-        # This part is used to terminate all the loops that are activated and start a new one for the update of the
-        # conversation.
+        """
+        :param channel_id: the id of the current channel
+        :param server_id: the id of the current server
+        Checks json file "loops" for the state of each look. If the loop's channel and server ID are the same as the
+        current chat room, it puts its state at 1 and allows the loop to run and refresh the page.
+        If not, the state is put at 0 and the loop stops.
+        Here we also initialize the server/channel ID, the username and the widgets (to be added) in the msg box,
+        as well as the Clock (loop)
+
+        PRE:Having a json file called loops in the correct place
+        POST: Starts / stops loops (clocks)
+        """
         loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         exist = False
         for item in loop_list:
@@ -196,8 +237,9 @@ class Conversation(RelativeLayout):
         self.event = Clock.schedule_interval(self.constant_update, 1.5)
 
     def send_message(self):
-        """
-
+        """ If there is a message and it is not starting with "/", it adds the message and sends it to the databse.
+        PRE: Having written a message
+        POST: Sends the message to the database
         """
         txt = self.inputs_container.ids.message_input.text
 
@@ -215,15 +257,22 @@ class Conversation(RelativeLayout):
             self.inputs_container.ids.message_input.text = ""
 
     def refresh(self):
-        """
-
+        """ Refreshes the screen by deleting all the widgets.
+            PRE: -
+            POST: Clears screen.
         """
         print("REFRESH")
         self.messages_container.messages_box.clear_widgets()
 
     def constant_update(self, dt):
         """
+            :param dt: needed for this operation
 
+            If the chat is open (id & state) it loops through all messages in the database, stores them temporarily and refreshes the screen and
+            reinitializes the conversation.
+
+            PRE : Having a valid json file "loops"
+            POST: Updates the conversation.
         """
         loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         activated = False
@@ -232,17 +281,17 @@ class Conversation(RelativeLayout):
                 activated = True
         if activated:
             print("clock on!" + str(self.server) + str(self.channel))
-            sort_da_list = []
+            message_list = []
             messages = ConnectToDb().messages
             for message in messages.find():
-                sort_da_list.append(message)
+                message_list.append(message)
             inthere = True
-            for i in sort_da_list:
+            for i in message_list:
                 if i not in self.last_list:
                     inthere = False
             if not inthere:
                 self.refresh()
                 self.messages_container.init_conversation(self.channel, self.server)
-            self.last_list = sort_da_list
+            self.last_list = message_list
         else:
             return False
