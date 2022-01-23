@@ -27,4 +27,4 @@ Voici un tableau des différentes étapes a suivre avant de lancer le chat et co
 | Connectez-vous a la base de donnée | Récupérez le certificat vous permetant de vous connecter a la base de donnée associée aux différentes conversations et placez-la dans le dossier principal de l'application | 
 | Exécutez le code  | Ouvrez le code dans une application capable de lancer ce dernier ou exécuter le dirrectement depuis la console pour vous connecter a l'application |   
 | Choisissez un server | Une fois dans l'application, choisissez un serveur puis un channel dans lequel vous souhaitez échanger des message avec d'autre personne  | 
-| Commencez à écrire | Il vous suffit de sélectionner le carde prévu à cet effet en bas de l'application et d'y écrir votre message. Une fois cela fait, cliquez sur le bouton envoyer pour partager votre message |
+| Commencez à écrire | Il vous suffit de sélectionner le carde prévu à cet effet en bas de l'application et d'y écrire votre message. Une fois cela fait, cliquez sur le bouton envoyer pour partager votre message |
