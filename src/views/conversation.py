@@ -13,8 +13,8 @@ from kivy.uix.scrollview import ScrollView
 
 from src.config import config
 from src.libs.bot.commands import Commands
-from src.models.gen_message import Message
-from src.models.connectdb import ConnectToDb
+from src.libs.chat.gen_message import Message
+from src.libs.chat.connectdb import ConnectToDb
 from kivy.clock import Clock
 import json
 

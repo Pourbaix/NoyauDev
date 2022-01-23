@@ -1,5 +1,4 @@
-from src.models.connectdb import *
-from src.models.gen_message import *
+from src.libs.chat.gen_message import *
 import unittest
 
 

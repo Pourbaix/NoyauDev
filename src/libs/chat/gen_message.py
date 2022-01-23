@@ -1,4 +1,4 @@
-from src.models.connectdb import ConnectToDb
+from src.libs.chat.connectdb import ConnectToDb
 from datetime import *
 
 
