@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """
-    [BASE]
     Ce fichier représente une zone de conversation.
 """
 
@@ -31,6 +30,9 @@ class ErrorWhileWriting(Exception):
 
 
 def get_username(file):
+    """
+
+    """
     try:
         with open(file) as json_file:
             data = json.load(json_file)
@@ -41,6 +43,9 @@ def get_username(file):
 
 
 def read(file):
+    """
+
+    """
     try:
         with open(file) as json_file:
             data = json.load(json_file)
@@ -50,6 +55,9 @@ def read(file):
 
 
 def add_to_json(file, data):
+    """
+
+    """
     try:
         elements_set = []
         with open(file) as shit:
@@ -66,6 +74,9 @@ def add_to_json(file, data):
 
 
 def modify_json(file, state, server, channel):
+    """
+
+    """
     try:
         elements_set = []
         with open(file) as shit:
@@ -83,11 +94,17 @@ def modify_json(file, state, server, channel):
 
 
 def overwrite(file, data):
-    elements_set = data
-    opened_file = open(file, "wt")
-    elements_set_string = json.dumps(elements_set)
-    opened_file.write(elements_set_string)
-    opened_file.close()
+    """
+
+    """
+    try:
+        elements_set = data
+        opened_file = open(file, "wt")
+        elements_set_string = json.dumps(elements_set)
+        opened_file.write(elements_set_string)
+        opened_file.close()
+    except ErrorWhileWriting():
+        print("An error has occurred while modifying the json file.")
 
 
 class InputsContainer(BoxLayout):
