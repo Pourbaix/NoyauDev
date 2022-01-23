@@ -31,10 +31,10 @@ class ErrorWhileWriting(Exception):
 
 def get_username(file):
     """
-    :param file: the corresponding json file
-    Fetches the username from the json file.
-    PRE: Having the json file with the username inside
-    POST: Returns the username.
+        :param file: the corresponding json file
+        Fetches the username from the json file.
+        PRE: Having the json file with the username inside
+        POST: Returns the username.
     """
 
     try:
@@ -48,10 +48,10 @@ def get_username(file):
 
 def read(file):
     """
-    :param file: the corresponding json file
-    Reads and returns the data from the json file
-    PRE: Having the correct json file.
-    POST: Returns the data from the json file.
+        :param file: the corresponding json file
+        Reads and returns the data from the json file
+        PRE: Having the correct json file.
+        POST: Returns the data from the json file.
     """
     try:
         with open(file) as json_file:
@@ -63,11 +63,11 @@ def read(file):
 
 def add_to_json(file, data):
     """
-    :param file: json file
-    :param data: data to be added in json file
-    Opens the json file (1st parameter) and adds the data (2nd parameter) into it.
-    PRE: Having existing json file and data.
-    POST: Writes the data in the json file.
+        :param file: json file
+        :param data: data to be added in json file
+        Opens the json file (1st parameter) and adds the data (2nd parameter) into it.
+        PRE: Having existing json file and data.
+        POST: Writes the data in the json file.
     """
 
     try:
@@ -87,15 +87,15 @@ def add_to_json(file, data):
 
 def modify_json(file, state, server, channel):
     """
-    :param file: the corresponding json file
-    :param state: the state of the loop
-    :param server: the server id
-    :param channel: the channel id
+        :param file: the corresponding json file
+        :param state: the state of the loop
+        :param server: the server id
+        :param channel: the channel id
 
-    If the channel and server IDs are the current ones, it changes the state of the loop (clock) so that it can start
-    or stop.
-    PRE: Having the correct data format in the json file
-    POST: Modifies the state of the loop.
+        If the channel and server IDs are the current ones, it changes the state of the loop (clock) so that it can start
+        or stop.
+        PRE: Having the correct data format in the json file
+        POST: Modifies the state of the loop.
     """
     try:
         elements_set = []
@@ -151,11 +151,11 @@ class MessageReceived(MessageLabel):
 class ConversationContainer(ScrollView):
     def __init__(self, channel_id, server_id):
         """
-        :param channel_id: the id of the current channel
-        :param server_id: the id of the current server
-        Initialises the class with the channel and server id as well as the conversation and its container.
-        PRE: -
-        POST: Initialises the conversation
+            :param channel_id: the id of the current channel
+            :param server_id: the id of the current server
+            Initialises the class with the channel and server id as well as the conversation and its container.
+            PRE: -
+            POST: Initialises the conversation
         """
         super(ConversationContainer, self).__init__()
         self.channel_id = channel_id
@@ -165,11 +165,11 @@ class ConversationContainer(ScrollView):
 
     def init_conversation(self, channel_id, server_id):
         """
-        :param channel_id: the id of the current channel
-        :param server_id: the id of the current server
-        Takes the messages from the database and adds displays them in the msg container.
-        PRE: Calling the function with the channel and server ID
-        POST: Displays messages
+            :param channel_id: the id of the current channel
+            :param server_id: the id of the current server
+            Takes the messages from the database and adds displays them in the msg container.
+            PRE: Calling the function with the channel and server ID
+            POST: Displays messages
         """
         print("INIT")
         message_list = []
@@ -189,16 +189,16 @@ class Conversation(RelativeLayout):
 
     def __init__(self, channel_id, server_id):
         """
-        :param channel_id: the id of the current channel
-        :param server_id: the id of the current server
-        Checks json file "loops" for the state of each look. If the loop's channel and server ID are the same as the
-        current chat room, it puts its state at 1 and allows the loop to run and refresh the page.
-        If not, the state is put at 0 and the loop stops.
-        Here we also initialize the server/channel ID, the username and the widgets (to be added) in the msg box,
-        as well as the Clock (loop)
+            :param channel_id: the id of the current channel
+            :param server_id: the id of the current server
+            Checks json file "loops" for the state of each look. If the loop's channel and server ID are the same as the
+            current chat room, it puts its state at 1 and allows the loop to run and refresh the page.
+            If not, the state is put at 0 and the loop stops.
+            Here we also initialize the server/channel ID, the username and the widgets (to be added) in the msg box,
+            as well as the Clock (loop)
 
-        PRE:Having a json file called loops in the correct place
-        POST: Starts / stops loops (clocks)
+            PRE:Having a json file called loops in the correct place
+            POST: Starts / stops loops (clocks)
         """
         loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         exist = False
@@ -230,9 +230,10 @@ class Conversation(RelativeLayout):
         self.event = Clock.schedule_interval(self.constant_update, 1.5)
 
     def send_message(self):
-        """ If there is a message and it is not starting with "/", it adds the message and sends it to the databse.
-        PRE: Having written a message
-        POST: Sends the message to the database
+        """
+            If there is a message and it is not starting with "/", it adds the message and sends it to the databse.
+            PRE: Having written a message
+            POST: Sends the message to the database
         """
         txt = self.inputs_container.ids.message_input.text
 
@@ -248,7 +249,8 @@ class Conversation(RelativeLayout):
             self.inputs_container.ids.message_input.text = ""
 
     def refresh(self):
-        """ Refreshes the screen by deleting all the widgets.
+        """
+            Refreshes the screen by deleting all the widgets.
             PRE: -
             POST: Clears screen.
         """

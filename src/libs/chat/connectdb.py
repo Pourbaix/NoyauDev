@@ -67,7 +67,3 @@ class ConnectToDb:
         """
         doc_count = self.__messages.count_documents({})
         return doc_count
-
-    @property
-    def loop(self):
-        return self.__loop
