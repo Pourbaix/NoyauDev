@@ -22,49 +22,71 @@ import json
 Builder.load_file("{0}/conversation.kv".format(config.VIEWS_DIR))
 
 
+class ErrorWhileOpening(Exception):
+    pass
+
+
+class ErrorWhileWriting(Exception):
+    pass
+
+
+def get_username(file):
+    try:
+        with open(file) as json_file:
+            data = json.load(json_file)
+            for i in data:
+                return i["user_name"]
+    except ErrorWhileOpening():
+        print("An error has occurred while opening the username json file.")
+
 def read(file):
-    with open(file) as json_file:
-        data = json.load(json_file)
-        return data
+    try:
+        with open(file) as json_file:
+            data = json.load(json_file)
+            return data
+    except ErrorWhileOpening():
+        print("An error has occurred while opening the json file.")
 
 
 def add_to_json(file, data):
-    elements_set = []
-    with open(file) as shit:
-        json_file = json.load(shit)
-        for i in json_file:
-            elements_set.append(i)
-    opened_file = open(file, "wt")
-    elements_set.append(data)
-    elements_set_string = json.dumps(elements_set)
-    opened_file.write(elements_set_string)
-    opened_file.close()
+    try:
+        elements_set = []
+        with open(file) as shit:
+            json_file = json.load(shit)
+            for i in json_file:
+                elements_set.append(i)
+        opened_file = open(file, "wt")
+        elements_set.append(data)
+        elements_set_string = json.dumps(elements_set)
+        opened_file.write(elements_set_string)
+        opened_file.close()
+    except ErrorWhileWriting():
+        print("An error has occurred while adding an element to the json file.")
 
 
 def modify_json(file, state, server, channel):
-    elements_set = []
-    with open(file) as shit:
-        json_file = json.load(shit)
-        for i in json_file:
-            if (i["server"] == server) & (i["channel"] == channel):
-                elements_set.append({"server": server, "channel": channel, "state": state})
-        elements_set.append(i)
-    print(elements_set)
-    opened_file = open(file, "wt")
-    elements_set_string = json.dumps(elements_set)
-    opened_file.write(elements_set_string)
-    opened_file.close()
-
-
-def overwrite(file, data):
     try:
-        elements_set = data
+        elements_set = []
+        with open(file) as shit:
+            json_file = json.load(shit)
+            for i in json_file:
+                if (i["server"] == server) & (i["channel"] == channel):
+                    elements_set.append({"server": server, "channel": channel, "state": state})
+            elements_set.append(i)
         opened_file = open(file, "wt")
         elements_set_string = json.dumps(elements_set)
         opened_file.write(elements_set_string)
         opened_file.close()
-    except:
-        pass
+    except ErrorWhileWriting():
+        print("An error has occurred while modifying an element in the json file.")
+
+
+def overwrite(file, data):
+    elements_set = data
+    opened_file = open(file, "wt")
+    elements_set_string = json.dumps(elements_set)
+    opened_file.write(elements_set_string)
+    opened_file.close()
 
 
 class InputsContainer(BoxLayout):
@@ -98,7 +120,6 @@ class ConversationContainer(ScrollView):
         messages = ConnectToDb().messages
         for message in messages.find():
             sort_da_list.append(message)
-        # conv_file_path = config.PUBLIC_DIR + "/tmp_conversations/basic.json"
 
         sort_da_list.reverse()
         for message in sort_da_list:
@@ -119,28 +140,28 @@ class ConversationContainer(ScrollView):
 class Conversation(RelativeLayout):
 
     def __init__(self, channel_id, server_id):
-        loop_list = read(config.ROOT_DIR + "\\src\\views\\loops.json")
+        loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         exist = False
         for item in loop_list:
             if (item["channel"] == channel_id) & (item["server"] == server_id):
                 exist = True
         if exist:
-            modify_json(config.ROOT_DIR + "\\src\\views\\loops.json", 1, server_id, channel_id)
+            modify_json(config.ROOT_DIR + "\\public\\all_loops\\loops.json", 1, server_id, channel_id)
         else:
             dict_loop = {"server": server_id, "channel": channel_id, "state": 1}
-            add_to_json(config.ROOT_DIR + "\\src\\views\\loops.json", dict_loop)
-        loop_list = read(config.ROOT_DIR + "\\src\\views\\loops.json")
-        print(loop_list)
+            add_to_json(config.ROOT_DIR + "\\public\\all_loops\\loops.json", dict_loop)
+        loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         for item in loop_list:
             if (item["channel"] != channel_id) | (item["server"] != server_id):
                 item["state"] = 0
-        overwrite(config.ROOT_DIR + "\\src\\views\\loops.json", loop_list)
+        overwrite(config.ROOT_DIR + "\\public\\all_loops\\loops.json", loop_list)
         super(Conversation, self).__init__()
         self.messages_container = ConversationContainer(channel_id, server_id)
         self.inputs_container = InputsContainer()
         self.channel = channel_id
         self.server = server_id
         self.last_list = []
+        self.username = get_username(config.ROOT_DIR + "\\public\\user_info\\user_info.json")
 
         self.add_widget(self.messages_container)
         self.add_widget(self.inputs_container)
@@ -151,7 +172,7 @@ class Conversation(RelativeLayout):
         txt = self.inputs_container.ids.message_input.text
 
         if txt:
-            msg = Message(txt, "Moi", self.channel, self.server)
+            msg = Message(txt, str(self.username), self.channel, self.server)
             self.messages_container.add_message(msg)
             msg.send_to_db()
 
@@ -166,11 +187,9 @@ class Conversation(RelativeLayout):
     def refresh(self):
         print("REFRESH")
         self.messages_container.messages_box.clear_widgets()
-        for child in self.messages_container.messages_box.children:
-            print(child)
 
     def constant_update(self, dt):
-        loop_list = read(config.ROOT_DIR + "\\src\\views\\loops.json")
+        loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         activated = False
         for item in loop_list:
             if (item["channel"] == self.channel) & (item["server"] == self.server) & (item["state"] == 1):
