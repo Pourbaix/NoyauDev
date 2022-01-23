@@ -116,6 +116,9 @@ class ConversationContainer(ScrollView):
         self.init_conversation(channel_id, server_id)
 
     def init_conversation(self, channel_id, server_id):
+        """
+
+        """
         print("INIT")
         sort_da_list = []
         messages = ConnectToDb().messages
@@ -130,6 +133,9 @@ class ConversationContainer(ScrollView):
                     self.messages_box.add_widget(msg, len(self.messages_box.children))
 
     def add_message(self, msg_obj, pos="left"):
+        """
+
+        """
         msg = MessageSent()
 
         if pos == "right":
@@ -141,6 +147,8 @@ class ConversationContainer(ScrollView):
 class Conversation(RelativeLayout):
 
     def __init__(self, channel_id, server_id):
+        # This part is used to terminate all the loops that are activated and start a new one for the update of the
+        # conversation.
         loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         exist = False
         for item in loop_list:
@@ -162,14 +170,18 @@ class Conversation(RelativeLayout):
         self.channel = channel_id
         self.server = server_id
         self.last_list = []
+        # Here we get the username that will be attach to the message
         self.username = get_username(config.ROOT_DIR + "\\public\\user_info\\user_info.json")
 
         self.add_widget(self.messages_container)
         self.add_widget(self.inputs_container)
-        # Démarrer la mise à jour régulière de la conversation
+        # Begin the regular conversation update.
         self.event = Clock.schedule_interval(self.constant_update, 1.5)
 
     def send_message(self):
+        """
+
+        """
         txt = self.inputs_container.ids.message_input.text
 
         if txt:
@@ -186,10 +198,16 @@ class Conversation(RelativeLayout):
             self.inputs_container.ids.message_input.text = ""
 
     def refresh(self):
+        """
+
+        """
         print("REFRESH")
         self.messages_container.messages_box.clear_widgets()
 
     def constant_update(self, dt):
+        """
+
+        """
         loop_list = read(config.ROOT_DIR + "\\public\\all_loops\\loops.json")
         activated = False
         for item in loop_list:
