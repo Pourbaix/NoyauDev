@@ -20,7 +20,7 @@ Base de données MongoDB Atlas : https://www.mongodb.com/fr-fr/cloud/atlas
 Framework : https://kivy.org/#home
 
 ## Comment l'utiliser.
-Voici un tableau des différentes étapes a suivre avant de lancer le chat et comment l'utiliser 
+Voici un tableau montrant les différentes étapes a suivre avant de lancer le chat et  quelques informations pour savoir comment l'utiliser. 
 
 | Etapes | Description |
 | :--- |:-------:| 
