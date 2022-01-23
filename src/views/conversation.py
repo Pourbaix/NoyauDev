@@ -39,6 +39,7 @@ def get_username(file):
     except ErrorWhileOpening():
         print("An error has occurred while opening the username json file.")
 
+
 def read(file):
     try:
         with open(file) as json_file:
