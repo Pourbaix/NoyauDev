@@ -116,7 +116,11 @@ def modify_json(file, state, server, channel):
 def overwrite(file, data):
     """
         :param file: the json file
-        :param data:
+        :param data: the data from the file
+
+        It sets the states of all the dictionaries to 0.
+        PRE: Having data in the json file
+        POST: All states change to 0
     """
     try:
         elements_set = data
