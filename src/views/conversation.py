@@ -184,17 +184,6 @@ class ConversationContainer(ScrollView):
                     msg = MessageSent(text=message["date"] + " - " + message["user"] + "\n" + message["data"])
                     self.messages_box.add_widget(msg, len(self.messages_box.children))
 
-    def add_message(self, msg_obj, pos="left"):
-        """
-
-        """
-        msg = MessageSent()
-
-        if pos == "right":
-            msg = MessageReceived()
-
-        msg.text = str(msg_obj.date) + " - " + msg_obj.user + "\n" + msg_obj.data
-
 
 class Conversation(RelativeLayout):
 
@@ -249,14 +238,12 @@ class Conversation(RelativeLayout):
 
         if txt:
             msg = Message(txt, str(self.username), self.channel, self.server)
-            self.messages_container.add_message(msg)
             msg.send_to_db()
 
             if txt[0] == "/":
                 bot = Commands(txt)
                 response_from_bot = bot.result
                 msg_res = Message(response_from_bot, "E-Bot", self.channel, self.server)
-                self.messages_container.add_message(msg_res, pos="right")
 
             self.inputs_container.ids.message_input.text = ""
 
