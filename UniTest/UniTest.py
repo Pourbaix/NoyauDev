@@ -14,12 +14,14 @@ class TestGenMessage(unittest.TestCase):
 
     def test_db_formating(self):
         self.assertTrue(isinstance(Message("Message", "User17899", "Room2", "Server41").db_formatting(), dict))
+    print("TestGenMessage done")
 
 
 class TestConnectDb(unittest.TestCase):
 
     def test_number_message(self):
         self.assertTrue(isinstance(ConnectToDb().number_message, int))
+    print("TestConnectDb done")
 
 
 class TestConversation(unittest.TestCase):
@@ -89,6 +91,8 @@ class TestConversation(unittest.TestCase):
             overwrite(right_path, 1)
             overwrite(right_path, "blabla")
             overwrite(right_path, data1)
+
+    print("TestConversation done")
 
 
 if __name__ == "__main__":
