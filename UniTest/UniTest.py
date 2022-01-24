@@ -19,39 +19,77 @@ class TestGenMessage(unittest.TestCase):
 class TestConnectDb(unittest.TestCase):
 
     def test_number_message(self):
-        self.assertTrue(isinstance(ConnectToDb().number_message(), int))
+        self.assertTrue(isinstance(ConnectToDb().number_message, int))
 
 
 class TestConversation(unittest.TestCase):
 
     def test_get_username(self):
-        with self.assertRaises(ErrorWhileOpening):
+        wrong_path1 = config.ROOT_DIR + "\\public\\all_loop\\test.txt"
+        wrong_path2 = config.ROOT_DIR + "\\public\\ll_loops\\lets_try.json"
+        with self.assertRaises(FileNotFoundError):
             # Those files don't exist
-            get_username("test.txt")
-            get_username("letstry.json")
+            get_username(wrong_path1)
+            get_username(wrong_path2)
         self.assertTrue(isinstance(get_username(config.ROOT_DIR + "\\public\\user_info\\user_info.json"), str))
 
     def test_read(self):
-        with self.assertRaises(ErrorWhileOpening):
+        wrong_path1 = config.ROOT_DIR + "\\public\\allloops\\test.txt"
+        wrong_path2 = config.ROOT_DIR + "\\public\\al_loops\\lets_try.json"
+        with self.assertRaises(FileNotFoundError):
             # Those files don't exist
-            read("test.txt")
-            read("letstry.json")
-        self.assertTrue(isinstance(read(config.ROOT_DIR + "\\public\\user_info\\loops.json"), list))
+            read(wrong_path1)
+            read(wrong_path2)
+        self.assertTrue(isinstance(read(config.ROOT_DIR + "\\public\\all_loops\\loops.json"), list))
 
     def test_add_to_json(self):
-        with self.assertRaises(ErrorWhileWriting):
+        data1 = {"server": "504", "channel": "1", "state": 1}
+        data2 = "ok"
+        data3 = 45
+        right_path = config.ROOT_DIR + "\\public\\all_loops\\loops.json"
+        wrong_path1 = config.ROOT_DIR + "\\public\\all_loops\\test.txt"
+        wrong_path2 = config.ROOT_DIR + "\\pulic\\all_lops\\lets_try.json"
+        with self.assertRaises(FileNotFoundError):
             # Those files don't exist
-            read("test.txt")
-            read("letstry.json")
+            add_to_json(wrong_path1, data1)
+            add_to_json(wrong_path2, data1)
+        with self.assertRaises(WrongTypeError):
+            # Data not valid
+            add_to_json(right_path, data2)
+            add_to_json(right_path, data3)
 
     def test_modify_json(self):
-        with self.assertRaises(ErrorWhileWriting):
+        data1 = {"server": "504", "channel": "1", "state": 1}
+        right_path = config.ROOT_DIR + "\\public\\all_loops\\loops.json"
+        wrong_path1 = config.ROOT_DIR + "\\pulic\\all_loops\\test.txt"
+        wrong_path2 = config.ROOT_DIR + "\\public\\all_lops\\lets_try.json"
+        with self.assertRaises(FileNotFoundError):
             # Those files don't exist
-            read("test.txt")
-            read("letstry.json")
+            modify_json(wrong_path1, data1["state"], data1["server"], data1["channel"])
+            modify_json(wrong_path2, data1["state"], data1["server"], data1["channel"])
+        with self.assertRaises(WrongTypeError):
+            # Data not valid
+            modify_json(right_path, "hello", "504", "1")
+            modify_json(right_path, 1, 504, "1")
+            modify_json(right_path, 1, "504", 1)
 
     def test_overwrite(self):
-        with self.assertRaises(ErrorWhileWriting):
+        right_path = config.ROOT_DIR + "\\public\\all_loops\\loops.json"
+        wrong_path1 = config.ROOT_DIR + "\\pblic\\all_loops\\test.txt"
+        wrong_path2 = config.ROOT_DIR + "\\public\\all_lops\\lets_try.json"
+        datas = []
+        data1 = {"server": "504", "channel": "1", "state": 1}
+        datas.append(data1)
+        with self.assertRaises(FileNotFoundError):
             # Those files don't exist
-            read("test.txt")
-            read("letstry.json")
+            overwrite(wrong_path1, datas)
+            overwrite(wrong_path2, datas)
+        with self.assertRaises(WrongTypeError):
+            # Data not valid
+            overwrite(right_path, 1)
+            overwrite(right_path, "blabla")
+            overwrite(right_path, data1)
+
+
+if __name__ == "__main__":
+    unittest.main()

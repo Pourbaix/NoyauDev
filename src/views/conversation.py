@@ -29,6 +29,10 @@ class ErrorWhileWriting(Exception):
     pass
 
 
+class WrongTypeError(Exception):
+    pass
+
+
 def get_username(file):
     """
         :param file: the corresponding json file
@@ -42,8 +46,8 @@ def get_username(file):
             data = json.load(json_file)
             for i in data:
                 return i["user_name"]
-    except ErrorWhileOpening():
-        print("An error has occurred while opening the username json file.")
+    except FileNotFoundError:
+        raise FileNotFoundError("\nThis file does not exist.")
 
 
 def read(file):
@@ -57,8 +61,8 @@ def read(file):
         with open(file) as json_file:
             data = json.load(json_file)
             return data
-    except ErrorWhileOpening():
-        print("An error has occurred while opening the json file.")
+    except FileNotFoundError:
+        raise FileNotFoundError("\nThis file does not exist.")
 
 
 def add_to_json(file, data):
@@ -71,18 +75,21 @@ def add_to_json(file, data):
     """
 
     try:
-        elements_set = []
-        with open(file) as shit:
-            json_file = json.load(shit)
-            for i in json_file:
-                elements_set.append(i)
-        opened_file = open(file, "wt")
-        elements_set.append(data)
-        elements_set_string = json.dumps(elements_set)
-        opened_file.write(elements_set_string)
-        opened_file.close()
-    except ErrorWhileWriting():
-        print("An error has occurred while adding an element to the json file.")
+        if isinstance(data, dict):
+            elements_set = []
+            with open(file) as shit:
+                json_file = json.load(shit)
+                for i in json_file:
+                    elements_set.append(i)
+            opened_file = open(file, "wt")
+            elements_set.append(data)
+            elements_set_string = json.dumps(elements_set)
+            opened_file.write(elements_set_string)
+            opened_file.close()
+        else:
+            raise WrongTypeError("\nData must be a dictionary!")
+    except FileNotFoundError:
+        raise FileNotFoundError("\nThis file does not exist.")
 
 
 def modify_json(file, state, server, channel):
@@ -98,19 +105,22 @@ def modify_json(file, state, server, channel):
         POST: Modifies the state of the loop.
     """
     try:
-        elements_set = []
-        with open(file) as shit:
-            json_file = json.load(shit)
-            for i in json_file:
-                if (i["server"] == server) & (i["channel"] == channel):
-                    elements_set.append({"server": server, "channel": channel, "state": state})
-            elements_set.append(i)
-        opened_file = open(file, "wt")
-        elements_set_string = json.dumps(elements_set)
-        opened_file.write(elements_set_string)
-        opened_file.close()
-    except ErrorWhileWriting():
-        print("An error has occurred while modifying an element in the json file.")
+        if isinstance(state, int) and isinstance(server, str) and isinstance(channel, str):
+            elements_set = []
+            with open(file) as shit:
+                json_file = json.load(shit)
+                for i in json_file:
+                    if (i["server"] == server) & (i["channel"] == channel):
+                        elements_set.append({"server": server, "channel": channel, "state": state})
+                elements_set.append(i)
+            opened_file = open(file, "wt")
+            elements_set_string = json.dumps(elements_set)
+            opened_file.write(elements_set_string)
+            opened_file.close()
+        else:
+            raise WrongTypeError("\nOne of the parameter has a wrong type!")
+    except FileNotFoundError:
+        raise FileNotFoundError("\nThis file does not exist.")
 
 
 def overwrite(file, data):
@@ -123,13 +133,16 @@ def overwrite(file, data):
         POST: All states change to 0
     """
     try:
-        elements_set = data
-        opened_file = open(file, "wt")
-        elements_set_string = json.dumps(elements_set)
-        opened_file.write(elements_set_string)
-        opened_file.close()
-    except ErrorWhileWriting():
-        print("An error has occurred while modifying the json file.")
+        if isinstance(data, list):
+            elements_set = data
+            opened_file = open(file, "wt")
+            elements_set_string = json.dumps(elements_set)
+            opened_file.write(elements_set_string)
+            opened_file.close()
+        else:
+            raise WrongTypeError("\nData must be a list!")
+    except FileNotFoundError:
+        raise FileNotFoundError("\nThis file does not exist.")
 
 
 class InputsContainer(BoxLayout):

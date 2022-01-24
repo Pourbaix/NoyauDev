@@ -32,10 +32,10 @@ class ConnectToDb:
             self.__db = db1
             self.__messages = messages
             self.__loop = loop
-        except ConnectError:
+        except:
             raise ConnectError("\n\n-----------------------------"
-                               "An error has occurred while connecting to the database."
-                               "\n\n-----------------------------")
+                               "\nAn error has occurred while connecting to the database."
+                               "\n-----------------------------")
 
     @property
     def db(self):
